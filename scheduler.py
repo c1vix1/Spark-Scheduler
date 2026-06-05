@@ -31,6 +31,11 @@ if terminalLines <= 15 and debug == False:
 
 numberOfEvents = int(input("Total Events"))
 for i in range(numberOfEvents):
+    eventLength = 0 
+    eventType = 0
+    eventName = ""
+    eventLengthHour = 0
+    eventLengthMinute = 0
     print(f"Event {i+1}")
     eventName = input(f"Event {i+1} Name:")
     eventTypeStr = input(f"Event {i+1} Type(use \"s\" for a Set Time Event, \"h\" for a High Priority Event, and \"n\" or leave blank for a Normal Priority Event)").lower()
@@ -50,5 +55,8 @@ for i in range(numberOfEvents):
                 INSERT INTO events(name,type,length) VALUES(\"{eventName}\",{eventType},{eventLength});
             """)
     con.commit()
-
+clearTable = bool(input("clearTable?"))
+if clearTable:
+    cur.execute("DELETE FROM events")
+    con.commit()
 print("Exited")
