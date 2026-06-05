@@ -28,21 +28,27 @@ if terminalLines <= 15 and debug == False:
     print("Terminal Too Small. Please Raise Terminal Size")
     exit = True
 
-while exit != True:
-    numberOfEvents = int(input("Total Events"))
-    for i in range(numberOfEvents):
-        eventName = input("Event Name:")
-        eventTypeStr = input("Event Type(use \"s\" for a Set Time Event, \"h\" for a High Priority Event, and \"n\" or leave blank for a Normal Priority Event)").lower()
-        if "s" in eventTypeStr:
-            eventType = 2
-        elif "h" in eventTypeStr:
-            eventType = 1
-        else: 
-            eventType = 0
-        eventLengthHour,eventLengthMinute = float(input("Event Length(Use \":\" to show minutes and hours using HH:MM)")).split(":")
-        eventLengthHour *= 60
-        eventLengthMinute += eventLengthHour
-        eventLength = eventLengthMinute
-        cur.execute(f"INSERT INTO events(name) VALUES(\"{eventName}\",{eventType},{eventLength});")
+
+numberOfEvents = int(input("Total Events"))
+for i in range(numberOfEvents):
+    print(f"Event {i+1}")
+    eventName = input(f"Event {i+1} Name:")
+    eventTypeStr = input(f"Event {i+1} Type(use \"s\" for a Set Time Event, \"h\" for a High Priority Event, and \"n\" or leave blank for a Normal Priority Event)").lower()
+    if "s" in eventTypeStr:
+        eventType = 2
+    elif "h" in eventTypeStr:
+        eventType = 1
+    else: 
+        eventType = 0
+    eventLengthHour,eventLengthMinute = map(int, input(f"Event {i+1} Length(Use \":\" to show minutes and hours using HH:MM)").split(":"))
+    
+    eventLengthHour *= 60
+    eventLengthMinute += eventLengthHour
+    eventLength = eventLengthMinute
+
+    cur.execute(f"""
+                INSERT INTO events(name,type,length) VALUES(\"{eventName}\",{eventType},{eventLength});
+            """)
+    con.commit()
 
 print("Exited")
