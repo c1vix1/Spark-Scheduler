@@ -4,14 +4,14 @@ import sqlite3
 # Enviroment Options
 debug = True
 exit = False
-clearTable = True
+clearTable = False
 # create SQLite3 DB file and make cursor for navigation
 con = sqlite3.connect("app_data.db")
 cur = con.cursor()
 # SQLite3 Cursor create table to store event data
-cur.execute("CREATE TABLE IF NOT EXISTS events(id AUTO_INCREMENT INTEGER PRIMARY KEY,name TEXT NOT NULL,type INTEGER NOT NULL,length FLOAT NOT NULL,preferedTime TIME,setTimeStart TIME,setTimeEnd TIME);")
+cur.execute("CREATE TABLE IF NOT EXISTS events(id INTEGER AUTO_INCREMENT PRIMARY KEY,name TEXT NOT NULL,type INTEGER NOT NULL,length FLOAT NOT NULL,preferedTime TIME,setTimeStart TIME,setTimeEnd TIME);")
 # Print welcome txt file
-with open("welcome.txt", "r", encoding="utf-8") as file:
+with open("PY_version/welcome.txt", "r", encoding="utf-8") as file:
     print(file.read())
 # Get terminal size for dashed <hr> and print <hr>
 try:
@@ -57,10 +57,11 @@ for i in range(numberOfEvents):
                 INSERT INTO events(name,type,length) VALUES(\"{eventName}\",{eventType},{eventLength});
             """)
     con.commit()
-set = cur.execute("""
+setTimeEventsTable = cur.execute("""
             SELECT id FROM events WHERE type = 2;
         """)
-print(set)
+setTimeEvents = setTimeEventsTable.fetchone()
+print(setTimeEvents)
 print(str(clearTable)+" ClearTable")
 if clearTable == True:
     cur.execute("DELETE FROM events")
