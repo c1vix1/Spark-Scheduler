@@ -9,7 +9,7 @@ clearTable = True
 con = sqlite3.connect("app_data.db")
 cur = con.cursor()
 # SQLite3 Cursor create table to store event data
-cur.execute("CREATE TABLE IF NOT EXISTS events(name TEXT NOT NULL,type INTEGER NOT NULL,length FLOAT NOT NULL,preferedTime TIME,setTimeStart TIME,setTimeEnd TIME);")
+cur.execute("CREATE TABLE IF NOT EXISTS events(id AUTO_INCREMENT INTEGER PRIMARY KEY,name TEXT NOT NULL,type INTEGER NOT NULL,length FLOAT NOT NULL,preferedTime TIME,setTimeStart TIME,setTimeEnd TIME);")
 # Print welcome txt file
 with open("welcome.txt", "r", encoding="utf-8") as file:
     print(file.read())
@@ -57,6 +57,10 @@ for i in range(numberOfEvents):
                 INSERT INTO events(name,type,length) VALUES(\"{eventName}\",{eventType},{eventLength});
             """)
     con.commit()
+set = cur.execute("""
+            SELECT id FROM events WHERE type = 2;
+        """)
+print(set)
 print(str(clearTable)+" ClearTable")
 if clearTable == True:
     cur.execute("DELETE FROM events")
