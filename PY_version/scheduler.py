@@ -6,10 +6,21 @@ debug = True
 exit = False
 clearTable = False
 # create SQLite3 DB file and make cursor for navigation
-con = sqlite3.connect("app_data.db")
+con = sqlite3.connect("PY_version/app_data.db")
 cur = con.cursor()
 # SQLite3 Cursor create table to store event data
-cur.execute("CREATE TABLE IF NOT EXISTS events(id INTEGER AUTO_INCREMENT PRIMARY KEY,name TEXT NOT NULL,type INTEGER NOT NULL,length FLOAT NOT NULL,preferedTime TIME,setTimeStart TIME,setTimeEnd TIME);")
+cur.execute("""
+            CREATE TABLE IF NOT EXISTS events(
+                id INTEGER AUTO_INCREMENT PRIMARY KEY,
+                date DATE DEFAULT CURRENT_DATE,
+                name TEXT NOT NULL,
+                type INTEGER NOT NULL,
+                length INTEGER NOT NULL,
+                preferedTime TIME,
+                setTimeStart TIME,
+                setTimeEnd TIME
+            );
+            """)
 # Print welcome txt file
 with open("PY_version/welcome.txt", "r", encoding="utf-8") as file:
     print(file.read())
@@ -54,7 +65,10 @@ for i in range(numberOfEvents):
     eventLength = eventLengthMinute
 
     cur.execute(f"""
-                INSERT INTO events(name,type,length) VALUES(\"{eventName}\",{eventType},{eventLength});
+                INSERT INTO events(name,type,length) 
+                VALUES(\"{eventName}\",
+                {eventType},
+                {eventLength});
             """)
     con.commit()
 setTimeEventsTable = cur.execute("""
